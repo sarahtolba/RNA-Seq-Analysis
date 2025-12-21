@@ -1,121 +1,118 @@
-# This repo is designed as a step-by-step tutorial to teach RNA-seq analysis including :
+# 🧬 Bulk RNA-seq Analysis Tutorial (Mus musculus)
 
-* Reference genome and annotation download
-* RNA-seq raw data download from SRA
-* Quality control before trimming
-* Adapter trimming and quality filtering
-* Reference genome indexing
-* Alignment of reads to the genome
-* BAM file processing and indexing
-* Gene-level quantification with featureCounts
-* Visualization of chromosome distribution and expression data
-* Heatmap generation of most variable genes from RNA-Seq counts
-* Differential expression analysis using DESeq2
-* Functional enrichment analyses with GO and KEGG pathways
-* Gene Set Enrichment Analysis (GSEA)
+## 📘 Overview
+
+This repository contains a **beginner-oriented, step-by-step bulk RNA-sequencing (RNA-seq) analysis pipeline** implemented using **Bash and R**.  
+The project is designed **for learning and teaching purposes**, guiding newcomers through standard RNA-seq workflows using **publicly available mouse datasets**.
+
+The focus of this project is **methodological training**, not biological discovery.
 
 ---
 
-## Scripts Overview
+## 🐭 Datasets Used
 
-## 1. rna_seq_analysis.sh
-* Performs FastQC on raw reads
-* Trims paired-end reads using fastp
-* Builds HISAT2 index for mouse genome (GRCm39)
-* Aligns trimmed reads with HISAT2
-* Converts SAM to sorted BAM and indexes with samtools
-* Generates read counts per gene using featureCounts
-* Outputs timing information
+All primary datasets used in this project are **mouse (*Mus musculus*) datasets**.
 
-### 2. Chromosome Data Visualization
+### 1️⃣ GEO Series: GSE298151
+- **Sample:** GSM9009135  
+- **Organism:** *Mus musculus*  
+- **Model:** B16 mouse melanoma cell line  
+- **Data type:** Bulk RNA-seq  
+- **Platform:** Illumina HiSeq 2000  
 
-* **Purpose:** Visualize distributions and relationships in chromosome-related data using bar plots, histograms, scatter plots, boxplots, and violin plots.
-* **Input:** A CSV file (`ranges.csv`) containing chromosome names and associated statistics like `log2FoldChange`, `stat`, and `baseMean`.
-* **Key Visualizations:**
-
-  * Bar plot of chromosome frequency
-  * Histogram of `log2FoldChange` values
-  * Scatter plot of `stat` vs `baseMean` per chromosome
-  * Boxplot and violin plot of `baseMean` grouped by chromosome
+**Usage in this project:**
+- Raw FASTQ quality control
+- Adapter trimming
+- Genome alignment
+- Gene-level quantification
+- Differential expression analysis
+- Functional enrichment (GO, KEGG, GSEA)
 
 ---
 
-### 3. Heatmap of Most Variable Genes
+### 2️⃣ GEO Series: GSE296967
+- **Organism:** *Mus musculus*  
+- **Data type:** Bulk RNA-seq  
 
-* **Purpose:** Identify the top 100 most variable genes across samples and visualize their expression patterns via a heatmap.
-* **Input:** Raw count data and metadata from the EBI Expression Atlas (example experiment E-MTAB-5243).
-* **Process:**
-
-  * Load raw counts and metadata
-  * Filter and select top variable genes by variance
-  * Generate a heatmap scaled by gene (row) with hierarchical clustering of samples
-* **Key libraries:** `pheatmap`, `RColorBrewer`, `tidyverse`
+**Usage in this project:**
+- Differential gene expression analysis using DESeq2
+- Metadata handling and experimental design
+- MA plots and volcano plots
 
 ---
 
-### 4. Differential Expression and Functional Enrichment Analysis
+## 🧬 Reference Genome and Annotation
 
-* **Purpose:** Conduct a comprehensive differential expression analysis and explore enriched biological functions and pathways.
-* **Input:** Raw count data and metadata from EBI Expression Atlas (example experiment E-MTAB-9479).
-* **Process:**
-
-  * Preprocess counts and metadata, ensure proper matching
-  * Run DESeq2 for differential expression analysis between conditions
-  * Filter significant genes based on adjusted p-value and fold change
-  * Annotate genes with human gene symbols and Entrez IDs
-  * Perform GO enrichment (Cellular Component and Molecular Function)
-  * Perform KEGG pathway enrichment
-  * Conduct Gene Set Enrichment Analysis (GSEA) for KEGG and GO Biological Processes
-* **Visualizations:** MA plot, barplots, dotplots, cnetplots, ridgeplots, and enrichment maps
-* **Key libraries:** `DESeq2`, `clusterProfiler`, `org.Hs.eg.db`, `enrichplot`
+- **Reference genome:** *Mus musculus* GRCm39  
+- **Gene annotation:** GENCODE vM106  
+- **Annotation database:** `org.Mm.eg.db`
 
 ---
 
-## How to Use
+## 🔁 Analysis Workflow
 
-1. **Setup environment:**
+### 1. Raw Data Processing (Bash)
+- Quality control with **FastQC**
+- Adapter trimming and filtering with **fastp**
+- Genome indexing and alignment with **HISAT2**
+- BAM file processing using **samtools**
+- Gene-level quantification using **featureCounts**
 
-   Install required R packages:
+### 2. Differential Expression Analysis (R)
+- Import of count matrices
+- Metadata preparation
+- Differential expression analysis using **DESeq2**
+- MA plots and volcano plots
 
-   ```r
-   install.packages(c("tidyverse", "pheatmap", "RColorBrewer"))
-   BiocManager::install(c("DESeq2", "clusterProfiler", "org.Hs.eg.db", "enrichplot", "AnnotationDbi"))
-   ```
-
-2. **Prepare data:**
-
-   * For chromosome visualization, place `ranges.csv` in the specified path.
-   * The count and metadata files for RNA-Seq are fetched directly from the provided URLs in the scripts.
-   * link to ranges.csv : https://drive.google.com/drive/folders/1KiGJPEhZwxqI2snOxTDia1_QimIEGYIy?usp=drive_link
-3. **Run scripts sequentially or independently:**
-
-   * Start with chromosome visualization to understand chromosome-specific distributions.
-   * Next, run the heatmap script to visualize expression variability.
-   * Finally, run the DESeq2 analysis and enrichment pipeline for functional interpretation.
-
----
-
-## Outputs and Interpretation
-
-* **Chromosome plots:** Summary views of chromosome frequencies and expression distributions.
-* **Heatmap:** Visual cluster patterns of the most variable genes across samples.
-* **DESeq2 Results:** Lists of differentially expressed genes with statistical significance.
-* **GO/KEGG Enrichment:** Identification of biological processes, molecular functions, cellular components, and pathways affected.
-* **GSEA:** Enriched pathways and gene sets ranked by expression change.
+### 3. Functional Analysis (R)
+- Gene annotation
+- **GO enrichment analysis**
+- **KEGG pathway analysis**
+- **Gene Set Enrichment Analysis (GSEA)**
 
 ---
 
-## Notes
+## 🧪 Educational Scope
 
-* Make sure internet access is available when loading datasets from online sources.
-* Adjust filtering parameters (e.g., variance threshold, p-value cutoff, fold change) based on dataset and biological questions.
-* Customize plot aesthetics for publication-quality figures.
+This project is intended to:
+- Introduce beginners to bulk RNA-seq analysis
+- Demonstrate best practices in RNA-seq workflows
+- Provide a reproducible reference pipeline
+- Serve as a learning resource for students entering bioinformatics
+
+**No biological or clinical conclusions are claimed.**
 
 ---
 
-## Contact and Support
+## 🛠️ Tools and Technologies
 
-For issues, suggestions, or collaborations, please contact:
+- **Bash**
+- **R**
+- FastQC
+- fastp
+- HISAT2
+- samtools
+- featureCounts
+- DESeq2
+- clusterProfiler
+- org.Mm.eg.db
 
-**\[sarah tolba]**
-Email: sarahtolba842@gmail.com
+---
+
+
+---
+
+## 👤 Author
+
+**Sara Tolba**  
+📧 sarahtolba842@gmail.com  
+🔗 GitHub: https://github.com/sarahtolba
+
+---
+
+## ⚠️ Notes
+
+- Internet access is required to retrieve public datasets.
+- Parameters can be adjusted depending on dataset size and learning goals.
+- This repository is meant for **training and demonstration purposes only**.
+
